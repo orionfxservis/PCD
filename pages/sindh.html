@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سندھ - کارگو ڈائریکٹری</title>
+<style>
+body{margin:0;font-family:'Noto Nastaliq Urdu',serif;background:#f7fbff;text-align:center;direction:rtl;}
+header{background:#007bff;color:white;padding:20px;font-size:28px;}
+.directory-section{padding:40px 20px;}
+.directory-section h2{color:#007bff;font-size:30px;margin-bottom:30px;}
+.directory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;justify-items:center;}
+.directory-box{background:white;border:1px solid #d0e7ff;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);padding:15px;width:180px;cursor:pointer;transition:all 0.3s ease;}
+.directory-box:hover{transform:translateY(-5px);background-color:#e6f2ff;}
+.company-name{color:#0056b3;font-size:20px;font-weight:bold;}
+.city-name{color:#444;font-size:16px;margin-top:5px;}
+
+/* Popup */
+.popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:1000;}
+.popup-content{background:#fff;border-radius:10px;padding:30px;width:90%;max-width:700px;text-align:right;box-shadow:0 4px 15px rgba(0,0,0,0.2);display:flex;align-items:flex-start;flex-direction:row;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.popup-logo{flex-shrink:0;width:120px;height:120px;border-radius:50%;border:2px solid #007bff;overflow:hidden;cursor:pointer;display:flex;justify-content:center;align-items:center;}
+.popup-logo img{width:100%;height:100%;object-fit:cover;}
+#popupLogoInput{display:none;}
+.popup-details{flex:1;min-width:250px;}
+.popup-details h3{color:#007bff;text-align:center;margin-bottom:20px;}
+.popup-details p{margin:8px 0;color:#333;font-size:18px;word-break:break-word;}
+.close-btn{background:#007bff;color:#fff;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:16px;margin-top:15px;display:block;margin:auto;}
+@media (max-width:720px){.popup-content{flex-direction:column;align-items:center}.popup-logo{margin-bottom:20px}}
+</style>
+</head>
+<body>
+<header>سندھ کارگو ڈائریکٹری</header>
+<section class="directory-section">
+<h2>سندھ کی کارگو کمپنیوں کی فہرست</h2>
+<div class="directory-grid" id="directoryGrid"></div>
+</section>
+
+<div class="popup" id="popup">
+<div class="popup-content">
+<div class="popup-details">
+<h3>تفصیلی معلومات</h3>
+<p><strong>داخلہ کی تاریخ:</strong> <span id="entryDate"></span></p>
+<p><strong>رجسٹریشن نمبر:</strong> <span id="regNo"></span></p>
+<p><strong>کمپنی کا نام:</strong> <span id="companyName"></span></p>
+<p><strong>مالک کا نام:</strong> <span id="ownerName"></span></p>
+<p><strong>مینجر کا نام:</strong> <span id="managerName"></span></p>
+<p><strong>صوبہ:</strong> سندھ</p>
+<p><strong>شہر:</strong> <span id="cityName"></span></p>
+<p><strong>پتہ:</strong> <span id="address"></span></p>
+<p><strong>فون نمبر:</strong> <span id="phone"></span></p>
+<p><strong>واٹس ایپ نمبر:</strong> <span id="whatsapp"></span></p>
+<p><strong>ای میل:</strong> <span id="email"></span></p>
+<button class="close-btn" onclick="closePopup()">بند کریں</button>
+</div>
+<div class="popup-logo" onclick="document.getElementById('popupLogoInput').click()">
+<img id="popupLogoPreview" src="https://via.placeholder.com/120x120.png?text=Logo" alt="Company Logo">
+<input type="file" id="popupLogoInput" accept="image/*" onchange="previewPopupLogo(event)">
+</div>
+</div>
+</div>
+
+<script>
+const companies=[
+{name:'خان ٹرانسپورٹ',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234567',whatsapp:'0300-7654321',email:'info@example.com'},
+{name:'بلو اسٹار',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234568',whatsapp:'0300-7654322',email:'info2@example.com'},
+{name:'پاک فاسٹ',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234569',whatsapp:'0300-7654323',email:'info3@example.com'},
+{name:'المدینہ ٹرانسپورٹ',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234570',whatsapp:'0300-7654324',email:'info4@example.com'},
+{name:'نور ایکسپریس',city:'میرپورخاص',address:'میرپورخاص، سڑک نمبر1',phone:'0300-1234571',whatsapp:'0300-7654325',email:'info5@example.com'},
+{name:'راوی ٹرانسپورٹ',city:'نوابشاہ',address:'نوابشاہ مارکیٹ',phone:'0300-1234572',whatsapp:'0300-7654326',email:'info6@example.com'},
+{name:'قریشی سروسز',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234573',whatsapp:'0300-7654327',email:'info7@example.com'},
+{name:'سندھ ایکسپریس',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234574',whatsapp:'0300-7654328',email:'info8@example.com'},
+{name:'ملک لاجسٹک',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234575',whatsapp:'0300-7654329',email:'info9@example.com'},
+{name:'ایم این ایس ٹرانسپورٹ',city:'ٹنڈوالہ یار',address:'ٹنڈوالہ یار مارکیٹ',phone:'0300-1234580',whatsapp:'0300-7654330',email:'info10@example.com'},
+{name:'گلزار سروس',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234581',whatsapp:'0300-7654331',email:'info11@example.com'},
+{name:'قاسم لاجسٹک',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234582',whatsapp:'0300-7654332',email:'info12@example.com'},
+{name:'مدینہ ایکسپریس',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234583',whatsapp:'0300-7654333',email:'info13@example.com'},
+{name:'الصفا ٹرانسپورٹ',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234584',whatsapp:'0300-7654334',email:'info14@example.com'},
+{name:'فارسٹ موورز',city:'نوابشاہ',address:'نوابشاہ مارکیٹ',phone:'0300-1234585',whatsapp:'0300-7654335',email:'info15@example.com'},
+{name:'ایچ ایس ایکسپریس',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234586',whatsapp:'0300-7654336',email:'info16@example.com'},
+{name:'پی کے موورز',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234587',whatsapp:'0300-7654337',email:'info17@example.com'},
+{name:'اسلام ٹرانسپورٹ',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234588',whatsapp:'0300-7654338',email:'info18@example.com'},
+{name:'یونائیٹڈ موورز',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234589',whatsapp:'0300-7654339',email:'info19@example.com'},
+{name:'ڈی ایچ اے سروس',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234590',whatsapp:'0300-7654340',email:'info20@example.com'}
+];
+
+const grid=document.getElementById('directoryGrid');
+companies.forEach((company,index)=>{
+  const box=document.createElement('div');
+  box.className='directory-box';
+  box.innerHTML=`<div class="company-name">${company.name}</div><div class="city-name">${company.city}</div>`;
+  box.onclick=()=>showDetails(company,index);
+  grid.appendChild(box);
+});
+
+function showDetails(company,index){
+  document.getElementById('entryDate').textContent=new Date().toLocaleDateString('ur-PK');
+  document.getElementById('regNo').textContent='REG-'+(1000+index);
+  document.getElementById('companyName').textContent=company.name;
+  document.getElementById('ownerName').textContent='مالک کا نام';
+  document.getElementById('managerName').textContent='مینجر کا نام';
+  document.getElementById('cityName').textContent=company.city;
+  document.getElementById('address').textContent=company.address;
+  document.getElementById('phone').textContent=company.phone;
+  document.getElementById('whatsapp').textContent=company.whatsapp;
+  document.getElementById('email').textContent=company.email;
+  document.getElementById('popup').style.display='flex';
+}
+
+function closePopup(){document.getElementById('popup').style.display='none';}
+
+function previewPopupLogo(event){
+  const file=event.target.files[0];
+  if(file){
+    const reader=new FileReader();
+    reader.onload=function(e){document.getElementById('popupLogoPreview').src=e.target.result;}
+    reader.readAsDataURL(file);
+  }
+}
+</script>
+</body>
+</html>
