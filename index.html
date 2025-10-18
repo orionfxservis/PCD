@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>کارگو ڈائریکٹری</title>
+  <style>
+    body {margin:0; font-family:'Noto Nastaliq Urdu', serif; background:#f7fbff; text-align:center; direction:rtl;}
+    header {padding:50px 20px; font-size:32px; color:#007bff;}
+    .welcome-text {font-size:24px; color:#333; margin-bottom:30px;}
+    .enter-btn {background:#007bff; color:#fff; border:none; padding:12px 25px; border-radius:5px; cursor:pointer; font-size:18px;}
+    .provinces {display:flex; justify-content:center; flex-wrap:wrap; gap:40px; margin-top:50px;}
+    .province {text-align:center; cursor:pointer; transition:transform 0.3s;}
+    .province:hover {transform:translateY(-5px);}
+    .province-circle {width:100px; height:100px; border-radius:50%; background:#a0d8f1; display:flex; align-items:center; justify-content:center; margin:auto; margin-bottom:10px;}
+    .province-name {font-size:20px; color:#007bff;}
+    /* Floating Menu */
+    .menu-btn {position:fixed; top:20px; right:20px; width:50px; height:50px; border-radius:50%; background:#007bff; color:#fff; font-size:28px; cursor:pointer; display:flex; justify-content:center; align-items:center; z-index:1001;}
+    .sidebar {position:fixed; top:0; right:-250px; width:250px; height:100%; background:rgba(0,123,255,0.9); color:#fff; padding:20px; transition:right 0.3s; z-index:1000;}
+    .sidebar h3 {margin-top:0; margin-bottom:20px; text-align:center;}
+    .sidebar a {display:block; margin:15px 0; color:#fff; text-decoration:none; font-size:18px;}
+    .sidebar.show {right:0;}
+    /* Scroll animation */
+    .fade-in {opacity:0; transform:translateY(20px); transition:all 0.8s ease;}
+    .fade-in.visible {opacity:1; transform:translateY(0);}
+  </style>
+</head>
+<body>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <div class="sidebar" id="sidebar">
+    <h3>نیوی گیشن</h3>
+    <a href="#">مین پیج</a>
+    <a href="pages/sindh.html">ڈائریکٹری</a>
+    <a href="#">ڈائریکٹری میں اندراج</a>
+    <a href="#">ایڈمن</a>
+  </div>
+
+  <header>کارگو ڈائریکٹری</header>
+  <div class="welcome-text">خوش آمدید کارگو ڈائریکٹری میں</div>
+  <button class="enter-btn" onclick="scrollToProvinces()">داخل ہوں</button>
+
+  <section class="provinces fade-in" id="provinces">
+    <div class="province" onclick="location.href='pages/sindh.html'">
+      <div class="province-circle">س</div>
+      <div class="province-name">سندھ</div>
+    </div>
+    <div class="province">
+      <div class="province-circle">پ</div>
+      <div class="province-name">پنجاب</div>
+    </div>
+    <div class="province">
+      <div class="province-circle">ب</div>
+      <div class="province-name">بلوچستان</div>
+    </div>
+    <div class="province">
+      <div class="province-circle">ک</div>
+      <div class="province-name">خیبر پختونخوا</div>
+    </div>
+  </section>
+
+  <script>
+    function toggleMenu(){
+      document.getElementById('sidebar').classList.toggle('show');
+    }
+    function scrollToProvinces(){
+      document.getElementById('provinces').scrollIntoView({behavior:'smooth'});
+      document.getElementById('provinces').classList.add('visible');
+    }
+  </script>
+</body>
+</html>
