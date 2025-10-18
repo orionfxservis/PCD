@@ -1,121 +1,271 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>سندھ - کارگو ڈائریکٹری</title>
-<style>
-body{margin:0;font-family:'Noto Nastaliq Urdu',serif;background:#f7fbff;text-align:center;direction:rtl;}
-header{background:#007bff;color:white;padding:20px;font-size:28px;}
-.directory-section{padding:40px 20px;}
-.directory-section h2{color:#007bff;font-size:30px;margin-bottom:30px;}
-.directory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;justify-items:center;}
-.directory-box{background:white;border:1px solid #d0e7ff;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);padding:15px;width:180px;cursor:pointer;transition:all 0.3s ease;}
-.directory-box:hover{transform:translateY(-5px);background-color:#e6f2ff;}
-.company-name{color:#0056b3;font-size:20px;font-weight:bold;}
-.city-name{color:#444;font-size:16px;margin-top:5px;}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سندھ ٹرانسپورٹ ڈائریکٹری</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background: #f7fbff;
+      text-align: center;
+      direction: rtl;
+    }
 
-/* Popup */
-.popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:1000;}
-.popup-content{background:#fff;border-radius:10px;padding:30px;width:90%;max-width:700px;text-align:right;box-shadow:0 4px 15px rgba(0,0,0,0.2);display:flex;align-items:flex-start;flex-direction:row;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-.popup-logo{flex-shrink:0;width:120px;height:120px;border-radius:50%;border:2px solid #007bff;overflow:hidden;cursor:pointer;display:flex;justify-content:center;align-items:center;}
-.popup-logo img{width:100%;height:100%;object-fit:cover;}
-#popupLogoInput{display:none;}
-.popup-details{flex:1;min-width:250px;}
-.popup-details h3{color:#007bff;text-align:center;margin-bottom:20px;}
-.popup-details p{margin:8px 0;color:#333;font-size:18px;word-break:break-word;}
-.close-btn{background:#007bff;color:#fff;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:16px;margin-top:15px;display:block;margin:auto;}
-@media (max-width:720px){.popup-content{flex-direction:column;align-items:center}.popup-logo{margin-bottom:20px}}
-</style>
+    header {
+      background: #007bff;
+      color: #fff;
+      padding: 20px;
+      font-size: 28px;
+    }
+
+    h2 {
+      margin: 20px 0;
+      color: #007bff;
+      font-size: 22px;
+    }
+
+    /* Floating Menu Button */
+    .menu-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #007bffcc;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      transition: background 0.3s;
+    }
+
+    .menu-btn:hover {
+      background: #0056b3;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100%;
+      background: rgba(0, 123, 255, 0.9);
+      color: #fff;
+      padding: 20px;
+      transition: right 0.3s;
+      z-index: 1000;
+    }
+
+    .sidebar.show {
+      right: 0;
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding-bottom: 10px;
+    }
+
+    .sidebar a {
+      display: block;
+      margin: 15px 0;
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    .sidebar a:hover {
+      color: #cce5ff;
+    }
+
+    /* Grid Boxes */
+    .company-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .company-box {
+      background: #e3f1ff;
+      border: 1px solid #cce0ff;
+      border-radius: 8px;
+      padding: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .company-box:hover {
+      background: #d1e8ff;
+      transform: translateY(-3px);
+    }
+
+    /* Popup Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      padding: 20px;
+      text-align: right;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 15px;
+      animation: popup 0.4s ease;
+    }
+
+    @keyframes popup {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-details {
+      flex: 1;
+    }
+
+    .modal-logo {
+      flex: 0 0 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-logo img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #007bff;
+    }
+
+    .close-btn {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      .modal-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      .modal-logo {
+        margin-bottom: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>سندھ کارگو ڈائریکٹری</header>
-<section class="directory-section">
-<h2>سندھ کی کارگو کمپنیوں کی فہرست</h2>
-<div class="directory-grid" id="directoryGrid"></div>
-</section>
 
-<div class="popup" id="popup">
-<div class="popup-content">
-<div class="popup-details">
-<h3>تفصیلی معلومات</h3>
-<p><strong>داخلہ کی تاریخ:</strong> <span id="entryDate"></span></p>
-<p><strong>رجسٹریشن نمبر:</strong> <span id="regNo"></span></p>
-<p><strong>کمپنی کا نام:</strong> <span id="companyName"></span></p>
-<p><strong>مالک کا نام:</strong> <span id="ownerName"></span></p>
-<p><strong>مینجر کا نام:</strong> <span id="managerName"></span></p>
-<p><strong>صوبہ:</strong> سندھ</p>
-<p><strong>شہر:</strong> <span id="cityName"></span></p>
-<p><strong>پتہ:</strong> <span id="address"></span></p>
-<p><strong>فون نمبر:</strong> <span id="phone"></span></p>
-<p><strong>واٹس ایپ نمبر:</strong> <span id="whatsapp"></span></p>
-<p><strong>ای میل:</strong> <span id="email"></span></p>
-<button class="close-btn" onclick="closePopup()">بند کریں</button>
-</div>
-<div class="popup-logo" onclick="document.getElementById('popupLogoInput').click()">
-<img id="popupLogoPreview" src="https://via.placeholder.com/120x120.png?text=Logo" alt="Company Logo">
-<input type="file" id="popupLogoInput" accept="image/*" onchange="previewPopupLogo(event)">
-</div>
-</div>
-</div>
+  <!-- Floating Menu -->
+  <div class="menu-btn" id="menuBtn">☰</div>
 
-<script>
-const companies=[
-{name:'خان ٹرانسپورٹ',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234567',whatsapp:'0300-7654321',email:'info@example.com'},
-{name:'بلو اسٹار',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234568',whatsapp:'0300-7654322',email:'info2@example.com'},
-{name:'پاک فاسٹ',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234569',whatsapp:'0300-7654323',email:'info3@example.com'},
-{name:'المدینہ ٹرانسپورٹ',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234570',whatsapp:'0300-7654324',email:'info4@example.com'},
-{name:'نور ایکسپریس',city:'میرپورخاص',address:'میرپورخاص، سڑک نمبر1',phone:'0300-1234571',whatsapp:'0300-7654325',email:'info5@example.com'},
-{name:'راوی ٹرانسپورٹ',city:'نوابشاہ',address:'نوابشاہ مارکیٹ',phone:'0300-1234572',whatsapp:'0300-7654326',email:'info6@example.com'},
-{name:'قریشی سروسز',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234573',whatsapp:'0300-7654327',email:'info7@example.com'},
-{name:'سندھ ایکسپریس',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234574',whatsapp:'0300-7654328',email:'info8@example.com'},
-{name:'ملک لاجسٹک',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234575',whatsapp:'0300-7654329',email:'info9@example.com'},
-{name:'ایم این ایس ٹرانسپورٹ',city:'ٹنڈوالہ یار',address:'ٹنڈوالہ یار مارکیٹ',phone:'0300-1234580',whatsapp:'0300-7654330',email:'info10@example.com'},
-{name:'گلزار سروس',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234581',whatsapp:'0300-7654331',email:'info11@example.com'},
-{name:'قاسم لاجسٹک',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234582',whatsapp:'0300-7654332',email:'info12@example.com'},
-{name:'مدینہ ایکسپریس',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234583',whatsapp:'0300-7654333',email:'info13@example.com'},
-{name:'الصفا ٹرانسپورٹ',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234584',whatsapp:'0300-7654334',email:'info14@example.com'},
-{name:'فارسٹ موورز',city:'نوابشاہ',address:'نوابشاہ مارکیٹ',phone:'0300-1234585',whatsapp:'0300-7654335',email:'info15@example.com'},
-{name:'ایچ ایس ایکسپریس',city:'حیدرآباد',address:'حیدرآباد روڈ، حیدرآباد',phone:'0300-1234586',whatsapp:'0300-7654336',email:'info16@example.com'},
-{name:'پی کے موورز',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234587',whatsapp:'0300-7654337',email:'info17@example.com'},
-{name:'اسلام ٹرانسپورٹ',city:'سکھر',address:'سکھر مارکیٹ، سکھر',phone:'0300-1234588',whatsapp:'0300-7654338',email:'info18@example.com'},
-{name:'یونائیٹڈ موورز',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234589',whatsapp:'0300-7654339',email:'info19@example.com'},
-{name:'ڈی ایچ اے سروس',city:'کراچی',address:'کراچی ہائی وے، کراچی',phone:'0300-1234590',whatsapp:'0300-7654340',email:'info20@example.com'}
-];
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h3>نیوی گیشن</h3>
+    <a href="../index.html">مین پیج</a>
+    <a href="#">ڈائریکٹری</a>
+    <a href="#">ڈائریکٹری میں اندراج</a>
+    <a href="#">ایڈمن</a>
+  </div>
 
-const grid=document.getElementById('directoryGrid');
-companies.forEach((company,index)=>{
-  const box=document.createElement('div');
-  box.className='directory-box';
-  box.innerHTML=`<div class="company-name">${company.name}</div><div class="city-name">${company.city}</div>`;
-  box.onclick=()=>showDetails(company,index);
-  grid.appendChild(box);
-});
+  <header>سندھ ٹرانسپورٹ ڈائریکٹری</header>
+  <h2>سندھ کی ٹرانسپورٹ کمپنیوں کی فہرست</h2>
 
-function showDetails(company,index){
-  document.getElementById('entryDate').textContent=new Date().toLocaleDateString('ur-PK');
-  document.getElementById('regNo').textContent='REG-'+(1000+index);
-  document.getElementById('companyName').textContent=company.name;
-  document.getElementById('ownerName').textContent='مالک کا نام';
-  document.getElementById('managerName').textContent='مینجر کا نام';
-  document.getElementById('cityName').textContent=company.city;
-  document.getElementById('address').textContent=company.address;
-  document.getElementById('phone').textContent=company.phone;
-  document.getElementById('whatsapp').textContent=company.whatsapp;
-  document.getElementById('email').textContent=company.email;
-  document.getElementById('popup').style.display='flex';
-}
+  <!-- Company Boxes -->
+  <section class="company-grid">
+    <!-- Generate 20 demo boxes -->
+    <script>
+      for (let i = 1; i <= 20; i++) {
+        document.write(`<div class='company-box' onclick='openModal(${i})'>ڈیمو کمپنی ${i}</div>`);
+      }
+    </script>
+  </section>
 
-function closePopup(){document.getElementById('popup').style.display='none';}
+  <!-- Popup Modal -->
+  <div class="modal" id="companyModal">
+    <div class="modal-content">
+      <div class="modal-details" id="modalDetails">
+        <p><strong>اندراج کی تاریخ:</strong> 2025-10-19</p>
+        <p><strong>رجسٹریشن نمبر:</strong> REG-001</p>
+        <p><strong>کمپنی کا نام:</strong> ڈیمو کمپنی</p>
+        <p><strong>مالک کا نام:</strong> احمد خان</p>
+        <p><strong>منیجر کا نام:</strong> وسیم علی</p>
+        <p><strong>صوبہ:</strong> سندھ</p>
+        <p><strong>شہر:</strong> کراچی</p>
+        <p><strong>پتہ:</strong> شاہراہ فیصل، کراچی</p>
+        <p><strong>فون نمبر:</strong> 021-1234567</p>
+        <p><strong>واٹس ایپ:</strong> +92 300 1234567</p>
+        <p><strong>ای میل:</strong> demo@company.com</p>
+        <button class="close-btn" onclick="closeModal()">بند کریں</button>
+      </div>
+      <div class="modal-logo">
+        <img src="https://via.placeholder.com/100" alt="Company Logo">
+      </div>
+    </div>
+  </div>
 
-function previewPopupLogo(event){
-  const file=event.target.files[0];
-  if(file){
-    const reader=new FileReader();
-    reader.onload=function(e){document.getElementById('popupLogoPreview').src=e.target.result;}
-    reader.readAsDataURL(file);
-  }
-}
-</script>
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const modal = document.getElementById('companyModal');
+    const modalDetails = document.getElementById('modalDetails');
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('show');
+    });
+
+    sidebar.addEventListener('mouseleave', () => {
+      sidebar.classList.remove('show');
+    });
+
+    function openModal(i) {
+      modal.style.display = 'flex';
+      modalDetails.querySelector('strong:nth-child(3)').nextSibling.textContent = ' ڈیمو کمپنی ' + i;
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+      if (e.target == modal) {
+        closeModal();
+      }
+    }
+  </script>
 </body>
 </html>
