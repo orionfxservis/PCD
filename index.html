@@ -5,32 +5,175 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>کارگو ڈائریکٹری</title>
   <style>
-    body {margin:0; font-family:'Noto Nastaliq Urdu', serif; background:#f7fbff; text-align:center; direction:rtl;}
-    header {padding:50px 20px; font-size:32px; color:#007bff;}
-    .welcome-text {font-size:24px; color:#333; margin-bottom:30px;}
-    .enter-btn {background:#007bff; color:#fff; border:none; padding:12px 25px; border-radius:5px; cursor:pointer; font-size:18px;}
-    .provinces {display:flex; justify-content:center; flex-wrap:wrap; gap:40px; margin-top:50px;}
-    .province {text-align:center; cursor:pointer; transition:transform 0.3s;}
-    .province:hover {transform:translateY(-5px);}
-    .province-circle {width:100px; height:100px; border-radius:50%; background:#a0d8f1; display:flex; align-items:center; justify-content:center; margin:auto; margin-bottom:10px;}
-    .province-name {font-size:20px; color:#007bff;}
-    /* Floating Menu */
-    .menu-btn {position:fixed; top:20px; right:20px; width:50px; height:50px; border-radius:50%; background:#007bff; color:#fff; font-size:28px; cursor:pointer; display:flex; justify-content:center; align-items:center; z-index:1001;}
-    .sidebar {position:fixed; top:0; right:-250px; width:250px; height:100%; background:rgba(0,123,255,0.9); color:#fff; padding:20px; transition:right 0.3s; z-index:1000;}
-    .sidebar h3 {margin-top:0; margin-bottom:20px; text-align:center;}
-    .sidebar a {display:block; margin:15px 0; color:#fff; text-decoration:none; font-size:18px;}
-    .sidebar.show {right:0;}
+    body {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background: #f7fbff;
+      text-align: center;
+      direction: rtl;
+    }
+
+    header {
+      padding: 50px 20px;
+      font-size: 32px;
+      color: #007bff;
+    }
+
+    .welcome-text {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .enter-btn {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.3s;
+    }
+
+    .enter-btn:hover {
+      background: #0056b3;
+    }
+
+    /* Provinces Section */
+    .provinces {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 50px;
+      flex-wrap: wrap;
+    }
+
+    .province {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .province-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #007bff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .province-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .province-name {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    /* Floating Menu Button */
+    .menu-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #007bffcc; /* light blue semi-transparent */
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      transition: background 0.3s;
+    }
+
+    .menu-btn:hover {
+      background: #0056b3; /* darker blue */
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -250px; /* hidden initially */
+      width: 250px;
+      height: 100%;
+      background: rgba(0, 123, 255, 0.9); /* light blue semi-transparent */
+      color: #fff;
+      padding: 20px;
+      transition: right 0.3s;
+      z-index: 1000;
+    }
+
+    .sidebar.show {
+      right: 0;
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding-bottom: 10px;
+    }
+
+    .sidebar a {
+      display: block;
+      margin: 15px 0;
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    .sidebar a:hover {
+      color: #cce5ff; /* lighter shade */
+    }
+
     /* Scroll animation */
-    .fade-in {opacity:0; transform:translateY(20px); transition:all 0.8s ease;}
-    .fade-in.visible {opacity:1; transform:translateY(0);}
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      .province-circle {
+        width: 60px;
+        height: 60px;
+      }
+      .province-name {
+        font-size: 16px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <!-- Floating Menu Button -->
+  <div class="menu-btn" id="menuBtn">☰</div>
+
+  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <h3>نیوی گیشن</h3>
-    <a href="#">مین پیج</a>
-    <a href="pages/sindh.html">ڈائریکٹری</a>
+    <a href="../index.html">مین پیج</a>
+    <a href="#">ڈائریکٹری</a>
     <a href="#">ڈائریکٹری میں اندراج</a>
     <a href="#">ایڈمن</a>
   </div>
@@ -41,30 +184,69 @@
 
   <section class="provinces fade-in" id="provinces">
     <div class="province" onclick="location.href='pages/sindh.html'">
-      <div class="province-circle">س</div>
+      <div class="province-circle" onclick="event.stopPropagation(); uploadProvinceImage(0)">
+        <img id="provinceImg0" src="https://via.placeholder.com/80" alt="سندھ" />
+        <input type="file" id="provinceInput0" style="display:none" accept="image/*" onchange="previewProvinceImage(event,0)">
+      </div>
       <div class="province-name">سندھ</div>
     </div>
+
     <div class="province">
-      <div class="province-circle">پ</div>
+      <div class="province-circle" onclick="uploadProvinceImage(1)">
+        <img id="provinceImg1" src="https://via.placeholder.com/80" alt="پنجاب" />
+        <input type="file" id="provinceInput1" style="display:none" accept="image/*" onchange="previewProvinceImage(event,1)">
+      </div>
       <div class="province-name">پنجاب</div>
     </div>
+
     <div class="province">
-      <div class="province-circle">ب</div>
+      <div class="province-circle" onclick="uploadProvinceImage(2)">
+        <img id="provinceImg2" src="https://via.placeholder.com/80" alt="بلوچستان" />
+        <input type="file" id="provinceInput2" style="display:none" accept="image/*" onchange="previewProvinceImage(event,2)">
+      </div>
       <div class="province-name">بلوچستان</div>
     </div>
+
     <div class="province">
-      <div class="province-circle">ک</div>
+      <div class="province-circle" onclick="uploadProvinceImage(3)">
+        <img id="provinceImg3" src="https://via.placeholder.com/80" alt="خیبر پختونخوا" />
+        <input type="file" id="provinceInput3" style="display:none" accept="image/*" onchange="previewProvinceImage(event,3)">
+      </div>
       <div class="province-name">خیبر پختونخوا</div>
     </div>
   </section>
 
   <script>
-    function toggleMenu(){
-      document.getElementById('sidebar').classList.toggle('show');
-    }
-    function scrollToProvinces(){
-      document.getElementById('provinces').scrollIntoView({behavior:'smooth'});
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('show');
+    });
+
+    // Auto-hide when mouse leaves
+    sidebar.addEventListener('mouseleave', () => {
+      sidebar.classList.remove('show');
+    });
+
+    function scrollToProvinces() {
+      document.getElementById('provinces').scrollIntoView({ behavior: 'smooth' });
       document.getElementById('provinces').classList.add('visible');
+    }
+
+    function uploadProvinceImage(index) {
+      document.getElementById('provinceInput' + index).click();
+    }
+
+    function previewProvinceImage(event, index) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('provinceImg' + index).src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
     }
   </script>
 </body>
