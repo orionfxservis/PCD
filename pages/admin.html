@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ایڈمن - کارگو ڈائریکٹری</title>
+  <style>
+    :root {
+      --blue: #007bff;
+      --blue-dark: #0056b3;
+      --light-blue: #cce5ff;
+      --bg: #f7fbff;
+    }
+    body {margin:0; font-family:'Noto Nastaliq Urdu', serif; background:var(--bg); direction:rtl; text-align:center;}
+    header {background:var(--blue); color:#fff; padding:20px; font-size:28px;}
+    footer {background:#f1f1f1; color:#555; padding:15px; margin-top:50px;}
+    .menu-btn {position:fixed; top:20px; right:20px; width:50px; height:50px; border-radius:50%; background:var(--light-blue); color:var(--blue-dark); font-size:28px; cursor:pointer; display:flex; justify-content:center; align-items:center; z-index:1001; border:1px solid var(--blue);}
+    .menu-btn:hover {background:var(--blue-dark); color:#fff;}
+    .sidebar {position:fixed; top:0; right:-250px; width:250px; height:100%; background:rgba(0,123,255,0.9); color:#fff; padding:20px; transition:right 0.3s; z-index:1000;}
+    .sidebar.show {right:0;}
+    .sidebar a {display:block; margin:15px 0; color:#fff; text-decoration:none; font-size:18px;}
+    .sidebar a:hover {color:#e0e0e0;}
+    .admin-section {margin-top:60px; padding:20px;}
+    .banner-box {
+      width:90%;
+      max-width:720px;
+      height:120px;
+      background:#ddd;
+      border:1px solid #ccc;
+      margin:20px auto;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:#777;
+      font-size:18px;
+      position:relative;
+    }
+    .banner-box img {width:100%; height:100%; object-fit:cover;}
+    .upload-btn {
+      background:var(--blue);
+      color:white;
+      border:none;
+      padding:8px 15px;
+      cursor:pointer;
+      border-radius:5px;
+      font-size:16px;
+      margin-top:10px;
+    }
+	
+	.provinces {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+.province {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.province-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--blue);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f8ff;
+}
+.province-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.province-name {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--blue);
+}
+
+  </style>
+</head>
+<body>
+
+<div class="menu-btn" id="menuBtn">☰</div>
+<div class="sidebar" id="sidebar">
+  <h3>نیوی گیشن</h3>
+  <a href="../index.html">مین پیج</a>
+  <a href="sindh.html">ڈائریکٹری</a>
+  <a href="#">ڈائریکٹری میں اندراج</a>
+  <a href="admin.html">ایڈمن</a>
+</div>
+
+<section class="provinces fade-in" id="provinces">
+  <div class="province" onclick="location.href='pages/sindh.html'">
+    <div class="province-circle" onclick="event.stopPropagation(); uploadProvinceImage(0)">
+      <img id="provinceImg0" src="https://via.placeholder.com/80" alt="سندھ" />
+      <input type="file" id="provinceInput0" style="display:none" accept="image/*" onchange="previewProvinceImage(event,0)">
+    </div>
+    <div class="province-name">سندھ</div>
+  </div>
+
+  <div class="province">
+    <div class="province-circle" onclick="uploadProvinceImage(1)">
+      <img id="provinceImg1" src="https://via.placeholder.com/80" alt="پنجاب" />
+      <input type="file" id="provinceInput1" style="display:none" accept="image/*" onchange="previewProvinceImage(event,1)">
+    </div>
+    <div class="province-name">پنجاب</div>
+  </div>
+
+  <div class="province">
+    <div class="province-circle" onclick="uploadProvinceImage(2)">
+      <img id="provinceImg2" src="https://via.placeholder.com/80" alt="بلوچستان" />
+      <input type="file" id="provinceInput2" style="display:none" accept="image/*" onchange="previewProvinceImage(event,2)">
+    </div>
+    <div class="province-name">بلوچستان</div>
+  </div>
+
+  <div class="province">
+    <div class="province-circle" onclick="uploadProvinceImage(3)">
+      <img id="provinceImg3" src="https://via.placeholder.com/80" alt="خیبر پختونخوا" />
+      <input type="file" id="provinceInput3" style="display:none" accept="image/*" onchange="previewProvinceImage(event,3)">
+    </div>
+    <div class="province-name">خیبر پختونخوا</div>
+  </div>
+</section>
+
+<header>ایڈمن پینل - کارگو ڈائریکٹری</header>
+
+<div class="admin-section">
+  <h2>بینر اپلوڈ کریں</h2>
+
+  <div class="banner-box" id="previewTop">اوپر بینر (120×720)</div>
+  <input type="file" id="bannerTopInput" accept="image/*">
+  <button class="upload-btn" onclick="saveBanner('bannerTop', 'previewTop', 'bannerTopInput')">محفوظ کریں</button>
+
+  <div class="banner-box" id="previewBottom">نیچے بینر (120×720)</div>
+  <input type="file" id="bannerBottomInput" accept="image/*">
+  <button class="upload-btn" onclick="saveBanner('bannerBottom', 'previewBottom', 'bannerBottomInput')">محفوظ کریں</button>
+</div>
+
+<footer>© 2025 کارگو ڈائریکٹری — تمام حقوق محفوظ ہیں۔</footer>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+menuBtn.addEventListener('click',()=>sidebar.classList.toggle('show'));
+sidebar.addEventListener('mouseleave',()=>sidebar.classList.remove('show'));
+
+function saveBanner(storageKey, previewId, inputId){
+  const fileInput = document.getElementById(inputId);
+  const file = fileInput.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = e => {
+      localStorage.setItem(storageKey, e.target.result);
+      document.getElementById(previewId).innerHTML = `<img src="${e.target.result}" alt="banner">`;
+      alert('بینر کامیابی سے محفوظ کر لیا گیا ہے!');
+    }
+    reader.readAsDataURL(file);
+  } else {
+    alert('براہ کرم تصویر منتخب کریں۔');
+  }
+}
+function loadPreviews(){
+  const top = localStorage.getItem('bannerTop');
+  const bottom = localStorage.getItem('bannerBottom');
+  if(top) document.getElementById('previewTop').innerHTML = `<img src="${top}">`;
+  if(bottom) document.getElementById('previewBottom').innerHTML = `<img src="${bottom}">`;
+}
+loadPreviews();
+</script>
+</body>
+</html>
