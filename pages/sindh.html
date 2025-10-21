@@ -29,8 +29,8 @@
     /* Floating Menu Button */
     .menu-btn {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 15px;
+      right: 15px;
       width: 50px;
       height: 50px;
       border-radius: 50%;
@@ -56,7 +56,7 @@
       right: -250px;
       width: 250px;
       height: 100%;
-      background: rgba(0, 123, 255, 0.9);
+      background: rgba(0, 123, 255, 0.95);
       color: #fff;
       padding: 20px;
       transition: right 0.3s;
@@ -88,10 +88,10 @@
       color: #cce5ff;
     }
 
-    /* Grid Boxes */
+    /* Company Grid */
     .company-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 15px;
       padding: 20px;
       max-width: 1000px;
@@ -105,6 +105,7 @@
       padding: 15px;
       cursor: pointer;
       transition: transform 0.2s, background 0.3s;
+      font-size: 18px;
     }
 
     .company-box:hover {
@@ -112,7 +113,7 @@
       transform: translateY(-3px);
     }
 
-    /* Popup Modal */
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -122,12 +123,13 @@
       justify-content: center;
       align-items: center;
       z-index: 2000;
+      padding: 10px;
     }
 
     .modal-content {
       background: #fff;
       border-radius: 10px;
-      width: 90%;
+      width: 100%;
       max-width: 600px;
       padding: 20px;
       text-align: right;
@@ -171,19 +173,64 @@
       cursor: pointer;
       margin-top: 10px;
       transition: background 0.3s;
+      font-size: 16px;
     }
 
     .close-btn:hover {
       background: #0056b3;
     }
 
-    @media (max-width: 600px) {
+    /* ✅ Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        font-size: 24px;
+        padding: 15px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      .menu-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
+      }
+      .company-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        padding: 15px;
+        gap: 10px;
+      }
+      .company-box {
+        font-size: 16px;
+        padding: 12px;
+      }
       .modal-content {
         flex-direction: column;
         align-items: center;
+        text-align: center;
       }
       .modal-logo {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+      }
+      .sidebar {
+        width: 200px;
+        font-size: 16px;
+      }
+      .sidebar a {
+        margin: 10px 0;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .company-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+      .modal-content {
+        width: 95%;
+        padding: 15px;
+      }
+      .close-btn {
+        width: 100%;
       }
     }
   </style>
@@ -197,7 +244,6 @@
   <div class="sidebar" id="sidebar">
     <h3>نیوی گیشن</h3>
     <a href="../index.html">مین پیج</a>
-    <a href="#">ڈائریکٹری</a>
     <a href="#">ڈائریکٹری میں اندراج</a>
     <a href="#">ایڈمن</a>
   </div>
@@ -205,17 +251,10 @@
   <header>سندھ ٹرانسپورٹ ڈائریکٹری</header>
   <h2>سندھ کی ٹرانسپورٹ کمپنیوں کی فہرست</h2>
 
-  <!-- Company Boxes -->
-  <section class="company-grid">
-    <!-- Generate 20 demo boxes -->
-    <script>
-      for (let i = 1; i <= 20; i++) {
-        document.write(`<div class='company-box' onclick='openModal(${i})'>ڈیمو کمپنی ${i}</div>`);
-      }
-    </script>
-  </section>
+  <!-- Company Grid -->
+  <section class="company-grid" id="companyGrid"></section>
 
-  <!-- Popup Modal -->
+  <!-- Modal -->
   <div class="modal" id="companyModal">
     <div class="modal-content">
       <div class="modal-details" id="modalDetails">
@@ -239,18 +278,25 @@
   </div>
 
   <script>
+    // Sidebar toggle
     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
+    menuBtn.addEventListener('click', () => sidebar.classList.toggle('show'));
+    sidebar.addEventListener('mouseleave', () => sidebar.classList.remove('show'));
+
+    // Generate 20 demo boxes
+    const grid = document.getElementById('companyGrid');
+    for (let i = 1; i <= 20; i++) {
+      const box = document.createElement('div');
+      box.className = 'company-box';
+      box.textContent = 'ڈیمو کمپنی ' + i;
+      box.onclick = () => openModal(i);
+      grid.appendChild(box);
+    }
+
+    // Modal logic
     const modal = document.getElementById('companyModal');
     const modalDetails = document.getElementById('modalDetails');
-
-    menuBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('show');
-    });
-
-    sidebar.addEventListener('mouseleave', () => {
-      sidebar.classList.remove('show');
-    });
 
     function openModal(i) {
       modal.style.display = 'flex';
@@ -262,10 +308,8 @@
     }
 
     window.onclick = function(e) {
-      if (e.target == modal) {
-        closeModal();
-      }
-    }
+      if (e.target === modal) closeModal();
+    };
   </script>
 </body>
 </html>
