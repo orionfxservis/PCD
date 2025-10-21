@@ -34,6 +34,7 @@
       color: var(--text-dark);
       margin-top: 30px;
       margin-bottom: 20px;
+      padding: 0 15px;
     }
 
     .banner {
@@ -47,6 +48,7 @@
       color: #666;
       font-size: 18px;
       border: 1px solid #ccc;
+      border-radius: 8px;
     }
 
     .enter-btn {
@@ -74,6 +76,7 @@
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.8s ease, transform 0.8s ease;
+      padding: 0 10px 40px;
     }
 
     .provinces.show {
@@ -189,6 +192,70 @@
     .sidebar.show {
       right: 0;
     }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 768px) {
+      header {
+        font-size: 26px;
+        padding: 15px 0;
+      }
+      .banner {
+        width: 90%;
+        height: 90px;
+        font-size: 16px;
+      }
+      .enter-btn {
+        padding: 10px 22px;
+        font-size: 16px;
+      }
+      .province-circle {
+        width: 80px;
+        height: 80px;
+        font-size: 32px;
+      }
+      .province-name {
+        font-size: 16px;
+      }
+      .provinces {
+        gap: 30px;
+      }
+      .menu-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
+      }
+      .sidebar {
+        width: 200px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        font-size: 22px;
+      }
+      .welcome-text {
+        font-size: 20px;
+      }
+      .banner {
+        height: 80px;
+        font-size: 14px;
+      }
+      .enter-btn {
+        font-size: 14px;
+        padding: 8px 18px;
+      }
+      .province-circle {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+      }
+      .province-name {
+        font-size: 14px;
+      }
+      .sidebar a {
+        font-size: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -198,7 +265,6 @@
   <div class="sidebar" id="sidebar">
     <h3>نیوی گیشن</h3>
     <a href="index.html">مین پیج</a>
-    <a href="#">ڈائریکٹری</a>
     <a href="#">ڈائریکٹری میں اندراج</a>
     <a href="pages/admin.html">ایڈمن</a>
   </div>
@@ -295,6 +361,5 @@
       }
     };
   </script>
-
 </body>
 </html>
